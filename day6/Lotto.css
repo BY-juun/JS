@@ -1,0 +1,11 @@
+.center-align{ 
+    margin: 0 auto;
+    width: 1080px;
+}
+
+#user_input{
+    width : 200px;
+    height: 30px;
+    margin-bottom: 30px;
+    margin-right: 10px;
+}
