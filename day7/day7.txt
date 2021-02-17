@@ -1,0 +1,34 @@
+JavaScript에서의 이미지 스프라이트
+document.getElementById("computer").style.background = 
+    "url(https://en.pimg.jp/023/182/267/1/23182267.jpg)" + image_position + " 0"; 
+
+Dictionary 자료구조 : key, value를 pair로 묶음.
+var RCS = {
+    바위 : "0",
+    가위 : "-142px",
+    보 : "-284px"
+};
+사용법 >> RCS.바위 : 0, RCS.가위 : "-142px" (객체 사용 방식)
+
+Object.keys() : 키가 담긴 배열을 반환
+Object.values() : 값이 담긴 배열을 반환
+Object.entries() : [key,value]쌍이 담긴 배열을 반환
+
+arr.find()함수
+const find1 = 
+arr.find((element, index, array) 
+=> { // 인덱스 2인 요소를 찾을 때 까지 반복 
+return index == 2; });
+index가 2인 요소를 찾으면 바로 탈출(뒤에껀 보지 않는다.)
+
+setTimeout() : 일정 시간 후에 특정 코드, 함수를 의도적으로
+지연한 뒤 실행하고 싶을 때 사용
+원형 >>
+setTimeout(function() 
+{ // Code here }, delay);
+delay : 1000은 1초를 의미.
+
+clearTimeout() : setTimeout을 중지 시킨다.
+clearInterval() : setInterval을 중지 시킨다.
+
+
