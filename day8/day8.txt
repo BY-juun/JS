@@ -1,0 +1,77 @@
+JavaScript는 lexical scoping(정적스코핑)이다. 
+다른 언어와 달리, 블록스코핑이 아닌 함수스코핑이다.
+
+ex1)
+var x = 'global';
+function ex() {
+  var x = 'local';
+  x = 'change';
+}
+ex(); // x를 바꿔본다.
+alert(x); // 여전히 'global'
+
+ex2)
+var x = 'global';
+function ex() {
+  x = 'change';
+}
+ex();
+alert(x); // 'change'
+
+: 자바스크립트는 변수의 범위를 호출한 함수의 지역스코프부터 전역 변수들이 있는 
+전역스코프까지점차 넓혀가며 찾는다.
+
+Scope Chain(스코프체인)
+: 내부 함수에서는 외부 함수의 변수에 접근 가능하지만 
+외부 함수에서는 내부 함수의 변수에 접근할 수 없습니다
+
+ex3)
+var name = 'zero';
+function outer() {
+  console.log('외부', name);
+  function inner() {
+    var enemy = 'nero';
+    console.log('내부', name);
+  }
+  inner();
+}
+outer();
+console.log(enemy); // undefined
+
+: inner 함수는 name 변수를 찾기 위해 먼저 자기 자신의 스코프에서 찾고, 
+없으면 한 단계 올라가 outer 스코프에서 찾고, 
+없으면 다시 올라가 결국 전역 스코프에서 찾습니다.
+
+Lexical scoping
+ex4)
+code1 : 
+var name = 'zero';
+function log() {
+  console.log(name);
+}
+
+function wrapper() {
+  name = 'nero';
+  log();
+}
+wrapper(); >> nero : wrapper내에서 name이 없으므로
+                     wrapper내에 있는 name은 전역변수 name과 매칭댐
+
+code2 : 
+var name = 'zero';
+function log() {
+  console.log(name);
+}
+
+function wrapper() {
+  var name = 'nero'; //diff
+  log();
+}
+wrapper();
+
+: log() 부분이 바뀌어서 실행되는것이아니라
+  이미 함수 log가 선언되었을 때부터 
+  log함수 내의 name은 전역변수 var name = "zero"와 매칭됨.
+
+실행 컨텍스트와 클로저에 관한 설명
+https://www.zerocho.com/category/JavaScript/post/5741d96d094da4986bc950a0
