@@ -75,3 +75,18 @@ wrapper();
 
 실행 컨텍스트와 클로저에 관한 설명
 https://www.zerocho.com/category/JavaScript/post/5741d96d094da4986bc950a0
+
+filter()함수
+
+구문
+arr.filter(callback(element[, index[, array]])[, thisArg])
+callback함수를 통해 각 요소를 시험한다. true를 반환하면 요소를 유지하고 false를 반환하면 요소를 버림.
+
+ex)10보다 작은 요소 제거
+function isBigEnough(value) {
+  return value >= 10;
+}
+var filtered = [12, 5, 8, 130, 44].filter(isBigEnough);
+
+ex)element 'X'인 요소 제거.
+var around_mine = around.filter(function(v){return v === "X";})

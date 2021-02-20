@@ -8,9 +8,20 @@
                 border-collapse: collapse;
             }
             td{
-                border: 1px solid black;
+                border: 1px solid white;
                 width: 60px;
                 height: 60px;
+                background : black;
+                font-size: 30px;
+
+            }
+            td.opened{
+                background : white;
+                
+            }
+            #result{
+                font-size: 50px;
+                font-weight: bolder;
             }
         </style>
     </head>
@@ -29,6 +40,7 @@
 
             </tbody>
         </table>        
+        <div id = "result"></div>
         <script src = "minesweeper.js"></script>
     </body>
 </html>
