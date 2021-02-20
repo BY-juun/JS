@@ -156,4 +156,5 @@ document.querySelector("#exec").addEventListener("click",function(){
         tbody.children[col].children[row].textContent = 'X';
         dataset[col][row] = "X";
     }
+    //수정
 });
