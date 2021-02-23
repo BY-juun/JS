@@ -1,0 +1,40 @@
+call by value / call by reference
+
+
+call by value : 말그대로 원시값이 <복사>되어 매게변수에 들어가는것
+
+function func(parameter){
+    parameter = 10;
+    console.log(parameter);
+}
+
+var par = 5;
+func(par); >> 10
+console.log(par); >> 5 
+
+: parameter에 par값이 <복사>되어들어감.
+
+call by reference : 자바스크립트에 call by reference는 존재하지 않음.
+
+function func(parameter){
+    parameter.a = 10;
+    console.log(parameter.a);
+}
+
+var par = {a : 5};
+func(par); >> 10
+console.log(par.a); >> 10 
+
+: parameter에 par값이 <참조>되어들어감. >> 따라서 parameter.a의 값을 바꾸면 par.a의 값도 바뀜.
+
+function func(parameter){
+    parameter = 10;
+    console.log(parameter.a);
+}
+
+var par = {a : 5};
+func(par); >> 10
+console.log(par); >> a : 5 
+: call by reference가 아닌 이유 >> 객체 속성 수정시에는 참조관계이지만, 객체 자체를 수정하게되면 관계가 깨짐
+>> 즉, 주소를 공유하거나 하는 형태가 아니다.
+
