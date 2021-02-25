@@ -20,6 +20,11 @@
             display: inline-block;
             vertical-align: top;
             width : 400px;
+            background: silver;
+        }
+
+        .turn{
+            border: 1px solid black;
         }
         .card{
             width : 100px;
@@ -29,6 +34,7 @@
             border: 1px solid black;
             margin-bottom: 10px;
             margin-right: 15px;
+            background: white;
         }
 
         .card-name{
@@ -70,6 +76,20 @@
         .card-hidden{
             display: none;
         }
+
+        #turn-btn{
+            float: right;
+            position: relative;
+            top : -20px;
+        }
+
+        .card-selected{
+            border: 2px solid red;
+        }
+
+        .card-turnover{
+            background: gray;
+        }
     </style>
 </head>
 <body>
@@ -86,7 +106,9 @@
         <div>덱</div>
     </div>
     <hr />
-    <div id = "my">
+    <button id = "turn-btn">턴넘기기</button>
+    
+    <div id = "my" class="turn">
         <div id = "my-cards"  style="height: 200px;">
         </div>
         <div id = "my-hero">

@@ -1,26 +1,122 @@
 
+var 상대 = {
+    덱 : document.getElementById("rival-deck"), 
+    영웅 : document.getElementById("rival-hero"),
+    필드 : document.getElementById("rival-cards"),
+    코스트 : document.getElementById("rival-cost"),
+    덱data : [],
+    영웅data : [],
+    필드data : [],
+    선택카드 : null,
+    선택카드data : null,
+}
 
-//화면에 보여지는 상대와 내 덱
-var 상대덱 = document.getElementById("rival-deck");
-var 내덱 = document.getElementById("my-deck"); 
-//덱의 데이터를 저장하는 변수
-var 상대덱data = [];
-var 내덱data = [];
-
-//영웅변수
-var 상대영웅 = document.getElementById("rival-hero");
-var 내영웅 = document.getElementById("my-hero");
-var 상대영웅data;
-var 내영웅data;
-var 상대필드data = [];
-var 내필드data = [];
+var 나 = {
+    덱 : document.getElementById("my-deck"), 
+    영웅 : document.getElementById("my-hero"),
+    필드 : document.getElementById("my-cards"),
+    코스트 : document.getElementById("my-cost"),
+    덱data : [],
+    영웅data : [],
+    필드data : [],
+    선택카드 : null,
+    선택카드data : null,
+}
 var 턴 = true;
+var 턴버튼 = document.getElementById("turn-btn");
 
-var 상대필드 = document.getElementById("rival-cards");
-var 내필드 = document.getElementById("my-cards");
-var 상대코스트 = document.getElementById("rival-cost");
-var 내코스트 = document.getElementById("my-cost");
 
+function 덱에서필드로(my_turn,데이터){
+    var 객체 = my_turn ? 나 : 상대;
+    var 현재코스트 = Number(객체.코스트.textContent);
+    if(현재코스트 < 데이터.cost)
+    {
+        return "end";
+    }
+    var idx = 객체.덱data.indexOf(데이터);
+    객체.덱data.splice(idx,1);
+    객체.필드data.push(데이터);
+            //덱과 필드의 html tag를 다 지우고, 가지고 있던 data를 기반으로 넣어주는작업.
+    객체.덱.innerHTML = "";
+    객체.필드.innerHTML = "";
+    객체.필드data.forEach(function(data){
+        카드돔연결(data, 객체.필드);
+    })
+    객체.덱data.forEach(function(data){
+        카드돔연결(data,객체.덱);
+    });
+    데이터.field = true ;
+    객체.코스트.textContent = 현재코스트 - 데이터.cost;
+}
+
+function 화면다시그리기(내화면){
+    var 객체  = 내화면 ? 나 : 상대;
+    객체.덱.innerHTML = "";
+    객체.필드.innerHTML = "";
+    객체.영웅.innerHTML = "";
+    객체.필드data.forEach(function(data){
+        카드돔연결(data, 객체.필드);
+    })
+    객체.덱data.forEach(function(data){
+        카드돔연결(data,객체.덱);
+    });
+    카드돔연결(객체.영웅data, 객체.영웅,true);
+}
+
+function 턴액션수행(카드, 데이터 , 내턴){
+    var 아군 = 내턴 ? 나 : 상대;
+    var 적군 = 내턴 ? 상대 : 나;
+    if(카드.classList.contains("card-turnover"))
+    {
+        return;
+    }
+    var 적군카드 = 내턴 ? !데이터.mine : 데이터.mine
+    if(적군카드 && 아군.선택카드 )  // 내차례인데 상대카드고 내카드가 선택되어있으면 공격
+    {
+        데이터.hp -= 아군.선택카드data.att;
+        if(데이터.hp <= 0)
+        {
+            var 인덱스 = 적군.필드data.indexOf(데이터);
+            if(인덱스 >-1)
+            {
+                적군.필드data.splice(인덱스,1);
+            }
+            else
+            {
+                alert("승리하셨습니다!");
+                초기세팅();
+            }
+        }
+        화면다시그리기(!내턴);
+        아군.선택카드.classList.remove("card-selected");
+        아군.선택카드.classList.add("card-turnover");
+        아군.선택카드 = null;
+        아군.선택카드data = null;
+        return;
+    }
+    else if(적군카드)
+    {
+        return;
+    }
+    if(데이터.field) //카드가 필드에 있다면 공격을 할 수 있도록 해야함.
+    {
+        카드.parentNode.querySelectorAll(".card").forEach(function(card){
+            card.classList.remove("card-selected");
+        })
+        카드.classList.add("card-selected");
+        아군.선택카드 = 카드;
+        아군.선택카드data = 데이터;
+        return;
+    }
+    else
+    {
+        if(덱에서필드로(내턴,데이터) !== "end")
+        {
+           내턴 ? 내덱생성(1) : 상대덱생성(1);
+        }
+    }
+    
+}
 //data와 화면연결
 function 카드돔연결(데이터, 돔, 영웅){
     var 카드 = document.querySelector(".card-hidden .card").cloneNode(true);
@@ -34,56 +130,8 @@ function 카드돔연결(데이터, 돔, 영웅){
         이름.textContent = "영웅";
         카드.appendChild(이름);
     }
-    카드.addEventListener("click",function(card){
-        if(턴) // 내차례일때
-        {
-            if(!데이터.mine) // 내차례인데 상대카드를 선택했을때,
-            {
-                return;
-            }
-            var 현재코스트 = Number(내코스트.textContent);
-            if(현재코스트 < 데이터.cost)
-            {
-                return;
-            }
-            var idx = 내덱data.indexOf(데이터);
-            내덱data.splice(idx,1);
-            내필드data.push(데이터);
-            //덱과 필드의 html tag를 다 지우고, 가지고 있던 data를 기반으로 넣어주는작업.
-            내덱.innerHTML = "";
-            내필드.innerHTML = "";
-            내필드data.forEach(function(data){
-                카드돔연결(data, 내필드);
-            })
-            내덱data.forEach(function(data){
-                카드돔연결(data,내덱);
-            });
-            내코스트.textContent = 현재코스트 - 데이터.cost;
-        }
-        else //상대차례일때
-        {
-            if(데이터.mine) //상대차례인데 내카드를 골랐을 때, 
-            {
-                return;
-            }
-            var 현재코스트 = Number(내코스트.textContent);
-            if(현재코스트 < 데이터.cost)
-            {
-                return;
-            }
-            var idx = 상대덱data.indexOf(데이터);
-            상대data.splice(idx,1);
-            상대필드data.push(데이터);
-            상대덱.innerHTML = "";
-            상대필드.innerHTML = "";
-            상대필드data.forEach(function(data){
-                카드돔연결(data, 상대필드);
-            })
-            내덱data.forEach(function(data){
-                카드돔연결(data,상대덱);
-            });
-            상대코스트.textContent = 현재코스트 - 데이터.cost;
-        }
+    카드.addEventListener("click",function(){
+        턴액션수행(카드, 데이터, 턴);
     });
     돔.appendChild(카드);
 }
@@ -92,32 +140,33 @@ function 카드돔연결(데이터, 돔, 영웅){
 function 상대덱생성(개수){
     for(var i=0;i<개수;i++)
     {
-        상대덱data.push(카드공장(false, false));
+        상대.덱data.push(카드공장(false, false));
     }
-    상대덱data.forEach(function(data){
+    상대.덱.innerHTML = "";
+    상대.덱data.forEach(function(data){
         //html 태그 통째로 복사.
-        카드돔연결(data, 상대덱);
+        카드돔연결(data, 상대.덱);
     });
 }
 function 내덱생성(개수){
     for(var i=0;i<개수;i++)
     {
-        내덱data.push(카드공장(false,true));
+        나.덱data.push(카드공장(false,true));
     }
-    내덱data.forEach(function(data){
+    나.덱.innerHTML = "";
+    나.덱data.forEach(function(data){
         //html 태그 통째로 복사.
-        카드돔연결(data, 내덱);
+        카드돔연결(data, 나.덱);
     });
 } 
 
-
 function 내영웅생성(){
-    내영웅data = 카드공장(true,true);
-    카드돔연결(내영웅data, 내영웅,true);
+    나.영웅data = 카드공장(true,true);
+    카드돔연결(나.영웅data, 나.영웅,true);
 } 
 function 상대영웅생성(){
-    상대영웅data = 카드공장(true,false);
-    카드돔연결(상대영웅data, 상대영웅,true);
+    상대.영웅data = 카드공장(true,false);
+    카드돔연결(상대.영웅data, 상대.영웅,true);
 } 
 
 
@@ -126,6 +175,7 @@ function Card(영웅, 내카드){
         this.att = Math.ceil(Math.random() * 2);
         this.hp = Math.ceil(Math.random() * 5) + 25;
         this.hero = true;
+        this.field = true;
     }else{
         this.att = Math.ceil(Math.random() * 5);
         this.hp = Math.ceil(Math.random() * 5);
@@ -136,7 +186,7 @@ function Card(영웅, 내카드){
         this.mine = true;
     }
     
-}
+}   
 
 function 카드공장(영웅, 내카드){ 
     return new Card(영웅, 내카드);
@@ -147,7 +197,30 @@ function 초기세팅(){
     내덱생성(5);
     내영웅생성();
     상대영웅생성();
+    화면다시그리기(true);
+    화면다시그리기(false);
 }
 
+턴버튼.addEventListener("click",function(){
+    var 객체  = 턴 ? 나 : 상대;
+    document.getElementById("rival").classList.toggle("turn");
+    document.getElementById("my").classList.toggle("turn");
+    객체.필드.innerHTML = "";
+    객체.영웅.innerHTML = "";
+    객체.필드data.forEach(function(data){
+        카드돔연결(data, 객체.필드);
+    })
+    카드돔연결(객체.영웅data, 객체.영웅,true);
+    턴 = !턴;
+    if(턴)
+    {
+        나.코스트.textContent = 10;
+    }
+    else
+    {
+        상대.코스트.textContent = 10;
+    }
+   
+});
 
 초기세팅();
