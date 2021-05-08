@@ -3,6 +3,7 @@ var tetrisData = [];
 var currentBlock;
 var nextBlock;
 var currentTopLeft = [0, 3];
+var hello
 var blocks = [
   {
     name: 's', // 네모
