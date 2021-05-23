@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang = "ko">
+    <head>
+        <meta charset="UTF-8" />
+        <title>모달창연습</title>
+        <style>
+            #modal-area{
+                border : 1px solid black;
+                width: 300px;
+                z-index: 1;
+            }
+
+            #modal, #modal-layer{
+                z-index: 1;
+                background: rgba(0,0,0,0.5);
+            }
+
+        </style>
+    </head>
+    <body>
+        <button id = "modal-open">모달창열기</button>
+        <div id = "modal-area">
+            <h2>모달창</h2>
+            <p>모달창입니다</p>
+            <button id = "modal-close">모달창닫기</button>
+            <div id = "modal-layer"></div>
+        </div>
+        <script src = "Modal.js"></script>
+    </body>
+</html>
